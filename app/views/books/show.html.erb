@@ -34,26 +34,29 @@
             <% end %>
           </td>
           <% end %>
-        <td>コメント数：<%= @book.book_comments.count %></td>
+          <td>コメント数：<%= @book.book_comments.count %></td>
         </tr>
-        <% @book.book_comments.each do |comment| %>
+        <% @comments.each do |comment| %>
         <tr>
-          <%= attachment_image_tag(comment.user, :profile_image, :fill, 100, 100, fallback: "no-image-icon.jpg") %><br>
-          <%= comment.user.name %>
-        </tr>
-          <% if comment.user == current_user %>
-          <div class="comment-delete">
-            <%= link_to "削除", book_book_comments_path(comment.book), method: :delete %>
-          </div>
-          <% end %>
+          <td style="border:none;">
+            <%= attachment_image_tag(comment.user, :profile_image, :fill, 100, 100, fallback: "no-image-icon.jpg") %><br>
+            <%= comment.user.name %>
+            <%= comment.comment %>
+            <% if comment.user == current_user %>
+              <%= link_to "Delete", book_book_comment_path(comment.book, comment), method: :delete, class: "btn btn-sm btn-danger" %>
+            <% end %>
+          </td>  
+        </tr>  
         <% end %>
       </table>
-      <div class="comments">
         <%= form_with(model:[@book, @book_comment], local: true) do |f| %>
-          <%= f.text_area :comment %>
-          <%= f.submit "送信" %>
+        <div class="form-group text-right" >
+          <form class="form-inline">
+            <%= f.text_area :comment, class: 'form-control book_comment' %>
+            <%= f.submit "送信" %>
+          </form>
+        </div>
         <% end %>
-      </div>
     </div>
   </div>
 </div>
