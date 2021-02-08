@@ -21,42 +21,16 @@
           <td><%= link_to 'Edit', edit_book_path(@book), class: "btn btn-sm btn-success edit_book_#{@book.id}" %></td>
           <td><%= link_to 'Destroy', book_path(@book), method: :delete, data: { confirm: '本当に消しますか？' }, class: "btn btn-sm btn-danger destroy_book_#{@book.id}"%></td>
           <% end %>
-          <% if @book.favorited_by?(current_user) %>
-          <td>
-            <%= link_to book_favorites_path(@book), method: :delete do %>
-              ♥<%= @book.favorites.count %>
-            <% end %>
+          <td id="favorites_buttons_<%= @book.id %>">
+            <%= render partial: 'favorites/favorite_btn', locals: { book: @book} %>
           </td>
-          <% else %>
-          <td>
-            <%= link_to book_favorites_path(@book), method: :post do %>
-              ♡<%= @book.favorites.count %>
-            <% end %>
-          </td>
-          <% end %>
           <td>コメント数：<%= @book.book_comments.count %></td>
         </tr>
-        <% @comments.each do |comment| %>
-        <tr>
-          <td style="border:none;">
-            <%= attachment_image_tag(comment.user, :profile_image, :fill, 100, 100, fallback: "no-image-icon.jpg") %><br>
-            <%= comment.user.name %>
-            <%= comment.comment %>
-            <% if comment.user == current_user %>
-              <%= link_to "Delete", book_book_comment_path(comment.book, comment), method: :delete, class: "btn btn-sm btn-danger" %>
-            <% end %>
-          </td>  
-        </tr>  
-        <% end %>
       </table>
-        <%= form_with(model:[@book, @book_comment], local: true) do |f| %>
-        <div class="form-group text-right" >
-          <form class="form-inline">
-            <%= f.text_area :comment, class: 'form-control book_comment' %>
-            <%= f.submit "送信" %>
-          </form>
-        </div>
-        <% end %>
+      <div id="comments_area">
+        <%= render partial: 'book_comments/index', locals: { comments: @comments } %>
+      </div>  
+      <%= render partial: 'book_comments/form', locals: { book: @book, book_comment: @book_comment } %>
     </div>
   </div>
 </div>
